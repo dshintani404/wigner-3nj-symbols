@@ -1,0 +1,10 @@
+[package]
+name = "wigner-3nj-symbols"
+version = "0.1.0"
+authors = ["dshin"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+factorial = "0.2.1"
