@@ -1,5 +1,4 @@
 use factorial::Factorial;
-use std::cmp::{max, min};
 
 pub struct Wigner6j {
     pub j1: u128,
@@ -25,8 +24,12 @@ impl Wigner6j {
         let mut sum = 0.0;
         let mut numerator;
         let mut denominator;
-        let kmin = max4(j1 + j2 + j3, j4 + j5 + j3, j1 + j5 + j6, j4 + j2 + j6);
-        let kmax = min3(j1 + j2 + j4 + j5, j1 + j3 + j4 + j6, j2 + j3 + j5 + j6);
+        let kmin = [j1 + j2 + j3, j4 + j5 + j3, j1 + j5 + j6, j4 + j2 + j6]
+            .iter()
+            .fold(0, |m, v| *v.max(&m));
+        let kmax = [j1 + j2 + j4 + j5, j1 + j3 + j4 + j6, j2 + j3 + j5 + j6]
+            .iter()
+            .fold(u128::MAX, |m, v| *v.min(&m));
         let mut k;
         for i in 0..(kmax - kmin) / 2 + 1 {
             k = kmin + i * 2;
@@ -43,14 +46,6 @@ impl Wigner6j {
 
         prod_delta.sqrt() * sum
     }
-}
-
-fn min3(i1: u128, i2: u128, i3: u128) -> u128 {
-    min(min(i1, i2), i3)
-}
-
-fn max4(i1: u128, i2: u128, i3: u128, i4: u128) -> u128 {
-    max(max(max(i1, i2), i3), i4)
 }
 
 fn phase(j: u128) -> f64 {
