@@ -1,5 +1,6 @@
 [package]
 name = "wigner-3nj-symbols"
+description = "A crate to calculate Wigner 3nj-symbols"
 version = "0.1.0"
 authors = ["dshin"]
 edition = "2018"
