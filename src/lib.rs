@@ -19,6 +19,22 @@ impl Wigner6j {
             j5,
             j6,
         } = self;
+        if violate_triad_conditions(j1, j2, j3) {
+            return 0.0;
+        }
+
+        if violate_triad_conditions(j1, j5, j6) {
+            return 0.0;
+        }
+
+        if violate_triad_conditions(j4, j2, j6) {
+            return 0.0;
+        }
+
+        if violate_triad_conditions(j4, j5, j3) {
+            return 0.0;
+        }
+
         let prod_delta =
             delta(j1, j2, j3) * delta(j4, j5, j3) * delta(j1, j5, j6) * delta(j4, j2, j6);
         let mut sum = 0.0;
@@ -47,6 +63,14 @@ impl Wigner6j {
         prod_delta.sqrt() * sum
     }
 }
+
+fn violate_triad_conditions(j1: u128, j2: u128, j3: u128) -> bool {
+    if j2 > j3 {
+        j1 < j2 - j3 || j2 + j3 < j1 || (j1 + j2 + j3) % 2 == 1
+    } else {
+        j1 < j3 - j2 || j2 + j3 < j1 || (j1 + j2 + j3) % 2 == 1
+    }
+} 
 
 fn phase(j: u128) -> f64 {
     if j % 2 == 0 {

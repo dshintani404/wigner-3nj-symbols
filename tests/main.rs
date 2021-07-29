@@ -40,3 +40,16 @@ fn test_wigner_6j_3() {
     };
     assert_eq!(w.value(), 0.017629529511598168)
 }
+
+#[test]
+fn test_wigner_6j_4() {
+    let w = Wigner6j {
+        j1: 0,
+        j2: 0,
+        j3: 0,
+        j4: 1,
+        j5: 1,
+        j6: 0,
+    };
+    assert_eq!(w.value(), 0.0)
+}
