@@ -1,89 +1,40 @@
 use factorial::Factorial;
 
-pub struct Wigner9j {
-    pub j1: u128,
-    pub j2: u128,
-    pub j3: u128,
-    pub l1: u128,
-    pub l2: u128,
-    pub l3: u128,
-    pub k1: u128,
-    pub k2: u128,
-    pub k3: u128,
+pub struct Wigner3nj {
+    pub js: Vec<u128>,
+    pub ls: Vec<u128>,
+    pub ks: Vec<u128>,
 }
 
-impl Wigner9j {
+impl Wigner3nj {
     pub fn value(self) -> f64 {
-        let Wigner9j {
-            j1,
-            j2,
-            j3,
-            l1,
-            l2,
-            l3,
-            k1,
-            k2,
-            k3,
-        } = self;
-        let min1: u128;
-        let min2: u128;
-        let min3: u128;
-        if j1 > k1 {
-            min1 = j1 - k1;
-        } else {
-            min1 = k1 - j1;
-        }
+        let Wigner3nj { mut js, ls, mut ks } = self;
 
-        if j2 > k2 {
-            min2 = j2 - k2;
-        } else {
-            min2 = k2 - j2;
-        }
-
-        if j3 > k3 {
-            min3 = j3 - k3;
-        } else {
-            min3 = k3 - j3;
-        }
-
-        let kmin = [min1, min2, min3].iter().fold(0, |m, v| *v.max(&m));
-        let kmax = [j1 + k1, j2 + k2, j3 + k3]
-            .iter()
-            .fold(u128::MAX, |m, v| *v.min(&m));
-        let mut sum = 0.0;
+        let kmin = 0;
+        let kmax = js[0] + ks[0];
+        let overall_phase = phase(
+            (js.iter().sum::<u128>() + ls.iter().sum::<u128>() + ks.iter().sum::<u128>()) / 2,
+        );
+        let mut value = 0.0;
+        js.push(js[0]);
+        ks.push(ks[0]);
         for i in 0..(kmax - kmin) / 2 + 1 {
             let x = kmin + 2 * i;
-            let w1 = Wigner6j {
-                j1: j1,
-                j2: k1,
-                j3: x,
-                j4: k2,
-                j5: j2,
-                j6: l1,
-            };
-            let w2 = Wigner6j {
-                j1: j2,
-                j2: k2,
-                j3: x,
-                j4: k3,
-                j5: j3,
-                j6: l2,
-            };
-            let w3 = Wigner6j {
-                j1: j3,
-                j2: k3,
-                j3: x,
-                j4: k1,
-                j5: j1,
-                j6: l3,
-            };
-            sum += (x + 1) as f64
-                * phase((j1 + j2 + j3 + l1 + l2 + l3 + k1 + k2 + k3) / 2 + 2 * x / 2)
-                * w1.value()
-                * w2.value()
-                * w3.value();
+            let mut wprd = 1.0;
+            for i in 0..ls.len() {
+                let w = Wigner6j {
+                    j1: js[i],
+                    j2: ks[i],
+                    j3: x,
+                    j4: ks[i + 1],
+                    j5: js[i + 1],
+                    j6: ls[i],
+                };
+                wprd *= w.value();
+            }
+            value += (x + 1) as f64 * phase(2 * x / 2) * wprd;
         }
-        sum
+        value * overall_phase
     }
 }
 
