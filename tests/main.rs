@@ -1,85 +1,47 @@
 extern crate wigner_3nj_symbols;
 
+use rstest::rstest;
 use wigner_3nj_symbols::{Wigner3nj, Wigner6j};
 
-#[test]
-fn test_wigner_6j_1() {
+#[rstest]
+#[case(0, 0, 0, 1, 1, 0, 0.0)]
+#[case(1, 1, 0, 1, 1, 2, 0.5)]
+#[case(1, 1, 2, 1, 1, 2, 0.16666666666666666)]
+#[case(2, 4, 6, 8, 10, 12, 0.017629529511598168)]
+fn test_wigner_6j(
+    #[case] j1: u128,
+    #[case] j2: u128,
+    #[case] j3: u128,
+    #[case] j4: u128,
+    #[case] j5: u128,
+    #[case] j6: u128,
+    #[case] expected: f64,
+) {
     let w = Wigner6j {
-        j1: 1,
-        j2: 1,
-        j3: 0,
-        j4: 1,
-        j5: 1,
-        j6: 2,
+        j1: j1,
+        j2: j2,
+        j3: j3,
+        j4: j4,
+        j5: j5,
+        j6: j6,
     };
-    assert_eq!(w.value(), 0.5)
+    assert_eq!(w.value(), expected)
 }
 
-#[test]
-fn test_wigner_6j_2() {
-    let w = Wigner6j {
-        j1: 1,
-        j2: 1,
-        j3: 2,
-        j4: 1,
-        j5: 1,
-        j6: 2,
-    };
-    assert_eq!(w.value(), 0.16666666666666666)
-}
-
-#[test]
-fn test_wigner_6j_3() {
-    let w = Wigner6j {
-        j1: 2,
-        j2: 4,
-        j3: 6,
-        j4: 8,
-        j5: 10,
-        j6: 12,
-    };
-    assert_eq!(w.value(), 0.017629529511598168)
-}
-
-#[test]
-fn test_wigner_6j_4() {
-    let w = Wigner6j {
-        j1: 0,
-        j2: 0,
-        j3: 0,
-        j4: 1,
-        j5: 1,
-        j6: 0,
-    };
-    assert_eq!(w.value(), 0.0)
-}
-
-#[test]
-fn test_wigner_3nj_0() {
+#[rstest]
+#[case(vec![1,1,0], vec![1,1,0], vec![1,1,0], 0.0)]
+#[case(vec![1,1,1], vec![2,2,2], vec![1,1,1], 0.1388888888888889)]
+#[case(vec![3,1,1], vec![2,2,2], vec![1,1,1], -0.05555555555555555)]
+fn test_wigner_3nj(
+    #[case] js: Vec<u128>,
+    #[case] ls: Vec<u128>,
+    #[case] ks: Vec<u128>,
+    #[case] expected: f64,
+) {
     let w = Wigner3nj {
-        js: vec![1, 1, 0],
-        ls: vec![1, 1, 0],
-        ks: vec![1, 1, 0],
+        js: js,
+        ls: ls,
+        ks: ks,
     };
-    assert_eq!(w.value(), 0.0)
-}
-
-#[test]
-fn test_wigner_3nj_1() {
-    let w = Wigner3nj {
-        js: vec![1, 1, 1],
-        ls: vec![2, 2, 2],
-        ks: vec![1, 1, 1],
-    };
-    assert_eq!(w.value(), 0.1388888888888889)
-}
-
-#[test]
-fn test_wigner_3nj_2() {
-    let w = Wigner3nj {
-        js: vec![3, 1, 1],
-        ls: vec![2, 2, 2],
-        ks: vec![1, 1, 1],
-    };
-    assert_eq!(w.value(), -0.05555555555555555)
+    assert_eq!(w.value(), expected)
 }
