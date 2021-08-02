@@ -1,7 +1,7 @@
 extern crate wigner_3nj_symbols;
 
 use rstest::rstest;
-use wigner_3nj_symbols::{Wigner3nj, Wigner6j};
+use wigner_3nj_symbols::{Wigner3nj1st, Wigner6j};
 
 #[rstest]
 #[case(0, 0, 0, 1, 1, 0, 0.0)]
@@ -38,7 +38,7 @@ fn test_wigner_3nj(
     #[case] ks: Vec<u128>,
     #[case] expected: f64,
 ) {
-    let w = Wigner3nj {
+    let w = Wigner3nj1st {
         js: js,
         ls: ls,
         ks: ks,
