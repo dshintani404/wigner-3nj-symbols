@@ -6,6 +6,12 @@ pub struct Wigner3nj1st {
     pub ks: Vec<u128>,
 }
 
+pub struct Wigner3nj2nd {
+    pub js: Vec<u128>,
+    pub ls: Vec<u128>,
+    pub ks: Vec<u128>,
+}
+
 impl Wigner3nj1st {
     pub fn value(self) -> f64 {
         let Wigner3nj1st { js, ls, ks } = self;
@@ -41,6 +47,46 @@ impl Wigner3nj1st {
             };
             wprd *= w.value();
             value += (x + 1) as f64 * phase((n as u128 - 1) * x / 2) * wprd;
+        }
+        value * overall_phase
+    }
+}
+
+impl Wigner3nj2nd {
+    pub fn value(self) -> f64 {
+        let Wigner3nj2nd { js, ls, ks } = self;
+
+        let kmin = 0;
+        let kmax = js[0] + ks[0];
+        let n = ls.len();
+        let overall_phase = phase(
+            (js.iter().sum::<u128>() + ls.iter().sum::<u128>() + ks.iter().sum::<u128>()) / 2,
+        );
+        let mut value = 0.0;
+        for i in 0..(kmax - kmin) / 2 + 1 {
+            let x = kmin + 2 * i;
+            let mut wprd = 1.0;
+            for i in 0..n - 1 {
+                let w = Wigner6j {
+                    j1: js[i],
+                    j2: ks[i],
+                    j3: x,
+                    j4: ks[i + 1],
+                    j5: js[i + 1],
+                    j6: ls[i],
+                };
+                wprd *= w.value();
+            }
+            let w = Wigner6j {
+                j1: js[n - 1],
+                j2: ks[n - 1],
+                j3: x,
+                j4: ks[0],
+                j5: js[0],
+                j6: ls[n - 1],
+            };
+            wprd *= w.value();
+            value += (x + 1) as f64 * phase(n as u128 * x / 2) * wprd;
         }
         value * overall_phase
     }
