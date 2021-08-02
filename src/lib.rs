@@ -1,17 +1,18 @@
 use factorial::Factorial;
 
-pub struct Wigner3nj {
+pub struct Wigner3nj1st {
     pub js: Vec<u128>,
     pub ls: Vec<u128>,
     pub ks: Vec<u128>,
 }
 
-impl Wigner3nj {
+impl Wigner3nj1st {
     pub fn value(self) -> f64 {
-        let Wigner3nj { mut js, ls, mut ks } = self;
+        let Wigner3nj1st { mut js, ls, mut ks } = self;
 
         let kmin = 0;
         let kmax = js[0] + ks[0];
+        let n = ls.len();
         let overall_phase = phase(
             (js.iter().sum::<u128>() + ls.iter().sum::<u128>() + ks.iter().sum::<u128>()) / 2,
         );
@@ -21,7 +22,7 @@ impl Wigner3nj {
         for i in 0..(kmax - kmin) / 2 + 1 {
             let x = kmin + 2 * i;
             let mut wprd = 1.0;
-            for i in 0..ls.len() {
+            for i in 0..n {
                 let w = Wigner6j {
                     j1: js[i],
                     j2: ks[i],
@@ -32,7 +33,7 @@ impl Wigner3nj {
                 };
                 wprd *= w.value();
             }
-            value += (x + 1) as f64 * phase(2 * x / 2) * wprd;
+            value += (x + 1) as f64 * phase((n as u128 - 1) * x / 2) * wprd;
         }
         value * overall_phase
     }
