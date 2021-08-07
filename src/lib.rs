@@ -1,11 +1,50 @@
+//! # Wigner 3nj Symbols
+//!
+//! `wigner_3nj_symbols` is a library to calculate 3n-j symbols for arbitrary positive integer n.
+//!
+//! This crate does not support arbitrary-precision arithmetic.
+//!
+//! Definitions of 3n-j symbols are based on equations (17.1) and (17.2) of the following textbook.
+//!
+//! A. P. Yutsis, I. B. Levinson, and V. V. Vanagas, Mathematical Apparatus of the Theory of Angular Momentum (Israel Program for Scientific Translations, Jerusalem, 1962).
 use factorial::Factorial;
 
+/// Wigner 3n-j Symobols of the first kind
+///
+/// # Examples
+///
+/// ```
+/// use wigner_3nj_symbols::Wigner3nj1st;
+///
+/// let w = Wigner3nj1st {
+///     js: vec!(1,1,1),
+///     ls: vec!(2,2,2),
+///     ks: vec!(1,1,1)
+/// };
+///
+/// assert_eq!(w.value(), 0.1388888888888889)
+/// ```
 pub struct Wigner3nj1st {
     pub js: Vec<u128>,
     pub ls: Vec<u128>,
     pub ks: Vec<u128>,
 }
 
+/// Wigner 3n-j Symobols of the second kind
+///
+/// # Examples
+///
+/// ```
+/// use wigner_3nj_symbols::Wigner3nj2nd;
+///
+/// let w = Wigner3nj2nd {
+///     js: vec!(1,1,1),
+///     ls: vec!(2,2,2),
+///     ks: vec!(1,1,1)
+/// };
+///
+/// assert_eq!(w.value(), 0.1111111111111111)
+/// ```
 pub struct Wigner3nj2nd {
     pub js: Vec<u128>,
     pub ls: Vec<u128>,
@@ -92,6 +131,24 @@ impl Wigner3nj2nd {
     }
 }
 
+/// Wigner 6j Symobols
+///
+/// # Examples
+///
+/// ```
+/// use wigner_3nj_symbols::Wigner6j;
+///
+/// let w = Wigner6j {
+///     j1: 1,
+///     j2: 1,
+///     j3: 0,
+///     j4: 1,
+///     j5: 1,
+///     j6: 2,
+/// };
+///
+/// assert_eq!(w.value(), 0.5)
+/// ```
 pub struct Wigner6j {
     pub j1: u128,
     pub j2: u128,
