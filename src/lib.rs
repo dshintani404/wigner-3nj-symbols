@@ -1,6 +1,6 @@
 //! # Wigner 3nj Symbols
 //!
-//! `wigner_3nj_symbols` is a library to calculate 3n-j symbols for arbitrary positive integer n.
+//! `wigner_3nj_symbols` is a crate to calculate 3n-j symbols for arbitrary positive integer n.
 //!
 //! This crate does not support arbitrary-precision arithmetic.
 //!
